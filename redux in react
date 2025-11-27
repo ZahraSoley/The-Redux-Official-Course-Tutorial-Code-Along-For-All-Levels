@@ -1,0 +1,86 @@
+// index.js
+
+import redux, {createStore} from "redux"
+
+export function increment() {
+    return {
+        type: "INCREMENT"
+    }
+}
+
+export function decrement() {
+    return {
+        type: "DECREMENT"
+    }
+}
+
+function reducer(count = 0, action) {
+    switch(action.type) {
+        case "INCREMENT":
+            return count + 1
+        case "DECREMENT":
+            return count - 1
+        default:
+            return count
+    }
+}
+
+const store = createStore(reducer)
+store.subscribe(() => console.log(store.getState()))
+export default store
+
+
+//index.js 
+
+import React from "react"
+import ReactDOM from "react-dom"
+//we need provider and store 
+import {Provider} from "react-redux"
+import store from "./redux"
+
+import App from "./App"
+
+ReactDOM.render(
+  //store here is like value in the contect api
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+    document.getElementById("root")
+)
+
+
+// App.js
+
+import React from "react"
+import {connect} from "react-redux"
+import {increment, decrement} from "./redux"
+
+function App(props) {    
+    return (
+        <div>
+            <h1>{props.count}</h1>
+            <button onClick={props.decrement}>-</button>
+            <button onClick={props.increment}>+</button>
+        </div>
+    )
+}
+
+# function mapStateToProps(state) {
+#     return {
+#         count: state
+#     }
+# }
+
+# const mapDispatchToProps = {
+#     increment,
+#     decrement
+# }
+
+
+# export default connect(mapStateToProps, mapDispatchToProps)(App)
+
+#  https://react-redux.js.org/api/connect#connect
+
+export default connect(state => ({count: state}), {increment, decrement})(App)
+
+
